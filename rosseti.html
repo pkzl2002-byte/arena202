@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Россети — структура компании и владения</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Geologica:wght@300..800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --text-xs:clamp(0.75rem,0.7rem + 0.25vw,0.875rem);
+  --text-sm:clamp(0.875rem,0.8rem + 0.35vw,1rem);
+  --text-base:clamp(1rem,0.95rem + 0.25vw,1.125rem);
+  --text-lg:clamp(1.125rem,1rem + 0.75vw,1.5rem);
+  --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+  --text-2xl:clamp(2rem,1.2rem + 2.5vw,3.5rem);
+  --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;--space-20:5rem;
+  --r-sm:.375rem;--r-md:.5rem;--r-lg:.75rem;--r-xl:1rem;--r-full:9999px;
+  --font-d:'Geologica',sans-serif;--font-b:'Inter','Helvetica Neue',sans-serif;
+  --tr:180ms cubic-bezier(0.16,1,0.3,1);
+  --bg:#0d1117;--surf:#161b22;--surf2:#1c2128;--surf3:#21262d;
+  --bord:rgba(255,255,255,0.08);--bord2:rgba(255,255,255,0.14);
+  --tp:#e6edf3;--tm:#8b949e;--tf:#484f58;
+  --acc:#2196f3;--acc-h:#1976d2;--acc-g:rgba(33,150,243,0.15);
+  --grn:#4caf50;--org:#ff9800;--red:#f44336;--pur:#9c27b0;
+  --sh-sm:0 1px 3px rgba(0,0,0,.3);--sh-md:0 4px 16px rgba(0,0,0,.4);--sh-lg:0 12px 40px rgba(0,0,0,.5);
+  --content:1180px;
+}
+[data-theme="light"]{
+  --bg:#f5f7fa;--surf:#fff;--surf2:#f0f2f5;--surf3:#e8eaed;
+  --bord:rgba(0,0,0,.08);--bord2:rgba(0,0,0,.14);
+  --tp:#1a1d23;--tm:#5a6270;--tf:#9aa0ab;
+  --acc:#1565c0;--acc-h:#0d47a1;--acc-g:rgba(21,101,192,.1);
+  --sh-sm:0 1px 3px rgba(0,0,0,.1);--sh-md:0 4px 16px rgba(0,0,0,.12);--sh-lg:0 12px 40px rgba(0,0,0,.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px;-webkit-font-smoothing:antialiased}
+body{min-height:100dvh;font-family:var(--font-b);font-size:var(--text-base);color:var(--tp);background:var(--bg);line-height:1.6;transition:background var(--tr),color var(--tr)}
+img{display:block;max-width:100%;height:auto}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;transition:color var(--tr),background var(--tr)}
+a{color:var(--acc);text-decoration:none}
+h1,h2,h3,h4{font-family:var(--font-d);line-height:1.15;text-wrap:balance}
+p{max-width:70ch;text-wrap:pretty}
+
+.container{max-width:var(--content);margin-inline:auto;padding-inline:clamp(var(--space-4),4vw,var(--space-8))}
+section{padding-block:clamp(var(--space-12),6vw,var(--space-20))}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(13,17,23,.88);border-bottom:1px solid var(--bord);transition:background var(--tr)}
+[data-theme="light"] nav{background:rgba(245,247,250,.92)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:var(--space-6)}
+.nav-logo{display:flex;align-items:center;gap:var(--space-3);font-family:var(--font-d);font-weight:700;font-size:var(--text-lg);color:var(--tp);text-decoration:none}
+.nav-links{display:flex;gap:var(--space-1)}
+.nav-links a{padding:var(--space-2) var(--space-3);border-radius:var(--r-md);font-size:var(--text-sm);color:var(--tm);font-weight:500;transition:color var(--tr),background var(--tr)}
+.nav-links a:hover{color:var(--tp);background:var(--surf2)}
+.theme-btn{width:36px;height:36px;border-radius:var(--r-md);display:grid;place-items:center;color:var(--tm);background:var(--surf2);border:1px solid var(--bord)}
+.theme-btn:hover{color:var(--tp);background:var(--surf3)}
+
+/* HERO */
+.hero{padding-block:clamp(var(--space-16),8vw,var(--space-20)) clamp(var(--space-12),5vw,var(--space-16));position:relative;overflow:hidden}
+.hero-grid-bg{position:absolute;inset:0;pointer-events:none;opacity:.04;background-image:linear-gradient(var(--tp) 1px,transparent 1px),linear-gradient(90deg,var(--tp) 1px,transparent 1px);background-size:40px 40px}
+.hero-glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,var(--acc-g) 0%,transparent 70%);pointer-events:none}
+.hero-content{position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-1) var(--space-3);border-radius:var(--r-full);background:var(--acc-g);border:1px solid rgba(33,150,243,.3);font-size:var(--text-xs);font-weight:600;color:var(--acc);letter-spacing:.04em;text-transform:uppercase;margin-bottom:var(--space-5)}
+.hero h1{font-size:var(--text-2xl);font-weight:800;color:var(--tp);margin-bottom:var(--space-4)}
+.hero h1 .at{color:var(--acc)}
+.hero-desc{font-size:var(--text-lg);color:var(--tm);margin-bottom:var(--space-8);max-width:58ch;line-height:1.7}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:var(--space-4)}
+.kpi-card{background:var(--surf);border:1px solid var(--bord);border-radius:var(--r-xl);padding:var(--space-5) var(--space-5);position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,var(--acc))}
+.kpi-val{font-family:var(--font-d);font-size:var(--text-xl);font-weight:800;color:var(--tp);font-variant-numeric:tabular-nums;line-height:1}
+.kpi-lbl{font-size:var(--text-xs);color:var(--tm);margin-top:var(--space-2);font-weight:500}
+.kpi-sub{font-size:var(--text-xs);color:var(--tf);margin-top:2px}
+
+/* SECTION HEADERS */
+.sec-badge{display:inline-block;padding:var(--space-1) var(--space-3);border-radius:var(--r-full);background:var(--acc-g);border:1px solid rgba(33,150,243,.25);font-size:var(--text-xs);font-weight:600;color:var(--acc);letter-spacing:.05em;text-transform:uppercase;margin-bottom:var(--space-4)}
+.sec-title{font-size:var(--text-xl);font-weight:800;color:var(--tp);margin-bottom:var(--space-3)}
+.sec-desc{font-size:var(--text-base);color:var(--tm);line-height:1.7;max-width:60ch}
+
+/* OWNERSHIP */
+#ownership{background:var(--surf);border-top:1px solid var(--bord);border-bottom:1px solid var(--bord)}
+.own-layout{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-12);align-items:center;margin-top:var(--space-10)}
+@media(max-width:768px){.own-layout{grid-template-columns:1fr}}
+.donut-wrap{position:relative;max-width:300px;margin:auto}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.donut-pct{font-family:var(--font-d);font-size:var(--text-xl);font-weight:800;color:var(--acc);line-height:1}
+.donut-sub{font-size:var(--text-xs);color:var(--tm);margin-top:4px}
+.own-legend{display:flex;flex-direction:column;gap:var(--space-3)}
+.leg-item{display:flex;align-items:flex-start;gap:var(--space-3);padding:var(--space-3) var(--space-4);border-radius:var(--r-lg);background:var(--surf2);border:1px solid var(--bord)}
+.leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.leg-name{flex:1;font-size:var(--text-sm);color:var(--tp);font-weight:500}
+.leg-note{font-size:var(--text-xs);color:var(--tm);margin-top:2px}
+.leg-pct{font-family:var(--font-d);font-size:var(--text-sm);font-weight:700;color:var(--tp);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ══════════════════════════════════════════════
+   INTERACTIVE TREE
+══════════════════════════════════════════════ */
+#structure{border-top:1px solid var(--bord)}
+.tree-legend{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-4);margin-bottom:var(--space-6)}
+.tleg{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);border-radius:var(--r-full);font-size:var(--text-xs);font-weight:600;border:1px solid transparent}
+.tleg.ta{background:rgba(76,175,80,.1);color:#81c784;border-color:rgba(76,175,80,.25)}
+.tleg.tb{background:rgba(33,150,243,.1);color:#64b5f6;border-color:rgba(33,150,243,.2)}
+.tleg.tc{background:rgba(255,152,0,.1);color:#ffb74d;border-color:rgba(255,152,0,.25)}
+.tleg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tleg.ta .tleg-dot{background:#4caf50}
+.tleg.tb .tleg-dot{background:#2196f3}
+.tleg.tc .tleg-dot{background:#ff9800}
+
+.tree-outer{margin-top:var(--space-8);overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:var(--space-4)}
+.tree-root{display:flex;flex-direction:column;align-items:center;min-width:900px}
+
+/* ROOT NODE */
+.tn-root{background:var(--surf2);border:2px solid rgba(33,150,243,.6);border-radius:var(--r-xl);padding:var(--space-5) var(--space-8);text-align:center;box-shadow:0 0 24px var(--acc-g);position:relative}
+.tn-root-title{font-family:var(--font-d);font-weight:800;font-size:var(--text-lg);color:var(--tp)}
+.tn-root-sub{font-size:var(--text-xs);color:var(--tm);margin-top:4px}
+.tn-root-badges{display:flex;gap:var(--space-2);justify-content:center;margin-top:var(--space-3);flex-wrap:wrap}
+.tn-badge{padding:2px 10px;border-radius:var(--r-full);font-size:var(--text-xs);font-weight:600}
+
+/* VERTICAL CONNECTOR */
+.vc{width:2px;background:var(--bord2);margin:0 auto}
+.vc-12{height:12px}.vc-20{height:20px}.vc-28{height:28px}
+
+/* HORIZONTAL LINE WRAPPER */
+.hline-row{display:flex;width:100%;align-items:flex-start;position:relative}
+.hline{border-top:2px solid var(--bord2);flex:1;margin-top:0;align-self:flex-start}
+.hline-no-right{border-right:none}
+.hline-no-left{border-left:none}
+
+/* MRSK ROW */
+.mrsk-row{display:flex;gap:var(--space-3);justify-content:center;width:100%}
+
+/* MRSK NODE */
+.tn-mrsk{border-radius:var(--r-xl);border:1px solid var(--bord);padding:var(--space-4);text-align:center;width:130px;flex-shrink:0;cursor:pointer;transition:border-color var(--tr),box-shadow var(--tr),transform var(--tr);background:var(--surf2);position:relative}
+.tn-mrsk:hover{transform:translateY(-2px);box-shadow:var(--sh-md)}
+.tn-mrsk.ta-node{border-color:rgba(76,175,80,.4)}
+.tn-mrsk.ta-node:hover{border-color:#4caf50;box-shadow:0 4px 20px rgba(76,175,80,.2)}
+.tn-mrsk.tb-node{border-color:rgba(33,150,243,.3)}
+.tn-mrsk.tb-node:hover{border-color:var(--acc);box-shadow:0 4px 20px var(--acc-g)}
+.tn-mrsk.tc-node{border-color:rgba(255,152,0,.35)}
+.tn-mrsk.tc-node:hover{border-color:var(--org);box-shadow:0 4px 20px rgba(255,152,0,.2)}
+.tn-mrsk.active{border-width:2px;background:var(--surf3)}
+.tn-mrsk.ta-node.active{border-color:#4caf50;box-shadow:0 0 0 3px rgba(76,175,80,.2)}
+.tn-mrsk.tb-node.active{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-g)}
+.tn-mrsk.tc-node.active{border-color:var(--org);box-shadow:0 0 0 3px rgba(255,152,0,.15)}
+.tn-mrsk-name{font-family:var(--font-d);font-weight:700;font-size:.72rem;color:var(--tp);line-height:1.3}
+.tn-mrsk-stake{display:inline-block;margin-top:var(--space-2);padding:2px 8px;border-radius:var(--r-full);font-size:.7rem;font-weight:700;font-variant-numeric:tabular-nums}
+.tn-mrsk.ta-node .tn-mrsk-stake{background:rgba(76,175,80,.15);color:#81c784}
+.tn-mrsk.tb-node .tn-mrsk-stake{background:rgba(33,150,243,.12);color:#64b5f6}
+.tn-mrsk.tc-node .tn-mrsk-stake{background:rgba(255,152,0,.12);color:#ffb74d}
+.tn-mrsk-hint{font-size:.65rem;color:var(--tf);margin-top:4px}
+.tn-mrsk-click{font-size:.65rem;color:var(--acc);margin-top:3px;opacity:0}
+.tn-mrsk:hover .tn-mrsk-click{opacity:1}
+
+/* EXPAND PANEL */
+#expandPanel{margin-top:0;overflow:hidden;transition:max-height .5s cubic-bezier(0.4,0,0.2,1),opacity .4s;max-height:0;opacity:0;width:100%}
+#expandPanel.open{max-height:2000px;opacity:1;margin-top:0}
+.expand-inner{background:var(--surf);border:1px solid var(--bord2);border-radius:var(--r-xl);padding:var(--space-6);margin-top:var(--space-3)}
+
+/* EXPAND: header */
+.ep-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--space-6);gap:var(--space-4)}
+.ep-title-wrap{}
+.ep-name{font-family:var(--font-d);font-weight:800;font-size:var(--text-lg);color:var(--tp)}
+.ep-meta{font-size:var(--text-xs);color:var(--tm);margin-top:4px;display:flex;flex-wrap:wrap;gap:var(--space-3)}
+.ep-badge{padding:2px 10px;border-radius:var(--r-full);font-size:var(--text-xs);font-weight:600}
+.ep-close{width:32px;height:32px;border-radius:var(--r-md);display:grid;place-items:center;color:var(--tm);background:var(--surf2);border:1px solid var(--bord);flex-shrink:0}
+.ep-close:hover{color:var(--tp);background:var(--surf3)}
+
+/* EXPAND: kpi */
+.ep-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--space-3);margin-bottom:var(--space-6)}
+.ep-kpi{background:var(--surf2);border-radius:var(--r-lg);padding:var(--space-4);border:1px solid var(--bord)}
+.ep-kpi-val{font-family:var(--font-d);font-weight:800;font-size:var(--text-base);color:var(--tp);font-variant-numeric:tabular-nums}
+.ep-kpi-lbl{font-size:var(--text-xs);color:var(--tm);margin-top:4px}
+
+/* EXPAND: branches */
+.ep-subtitle{font-family:var(--font-d);font-weight:700;font-size:var(--text-base);color:var(--tp);margin-bottom:var(--space-4)}
+.branches-list{display:flex;flex-direction:column;gap:0}
+
+/* Branch row */
+.branch-row{border-bottom:1px solid var(--bord);overflow:hidden}
+.branch-row:last-child{border-bottom:none}
+.branch-header{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);cursor:pointer;transition:background var(--tr);border-radius:var(--r-md)}
+.branch-header:hover{background:var(--surf2)}
+.branch-expand-icon{width:20px;height:20px;border-radius:var(--r-sm);border:1px solid var(--bord);display:grid;place-items:center;color:var(--tm);flex-shrink:0;transition:transform var(--tr),background var(--tr)}
+.branch-row.open .branch-expand-icon{transform:rotate(90deg);background:var(--acc-g);border-color:rgba(33,150,243,.3);color:var(--acc)}
+.branch-city-icon{font-size:1em;flex-shrink:0}
+.branch-name{flex:1;font-size:var(--text-sm);font-weight:600;color:var(--tp)}
+.branch-city{font-size:var(--text-xs);color:var(--tm)}
+.branch-region{font-size:var(--text-xs);color:var(--tf);margin-left:auto;white-space:nowrap}
+
+/* Branch detail */
+.branch-detail{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(0.4,0,0.2,1)}
+.branch-row.open .branch-detail{max-height:600px}
+.branch-detail-inner{padding:0 var(--space-4) var(--space-4) calc(var(--space-4) + 20px + var(--space-3))}
+.bd-facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-3)}
+.bd-fact{background:var(--bg);border:1px solid var(--bord);border-radius:var(--r-lg);padding:var(--space-3) var(--space-4)}
+.bd-fact-lbl{font-size:var(--text-xs);color:var(--tm);margin-bottom:4px}
+.bd-fact-val{font-size:var(--text-sm);color:var(--tp);font-weight:600}
+.bd-also{margin-top:var(--space-3);font-size:var(--text-xs);color:var(--tf);padding:var(--space-3) var(--space-4);background:var(--bg);border-radius:var(--r-md);border:1px solid var(--bord)}
+.bd-also strong{color:var(--tm)}
+
+/* FINANCIALS */
+#financials{border-top:1px solid var(--bord)}
+.fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-8);margin-top:var(--space-8)}
+@media(max-width:768px){.fin-grid{grid-template-columns:1fr}}
+.fin-box{background:var(--surf);border:1px solid var(--bord);border-radius:var(--r-xl);padding:var(--space-6)}
+.fin-title{font-family:var(--font-d);font-weight:700;font-size:var(--text-base);color:var(--tp);margin-bottom:var(--space-2)}
+.fin-sub{font-size:var(--text-xs);color:var(--tm);margin-bottom:var(--space-5)}
+.chart-wrap{position:relative;height:200px}
+
+/* FACTS */
+#about{background:var(--surf);border-top:1px solid var(--bord);border-bottom:1px solid var(--bord)}
+.facts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-4);margin-top:var(--space-8)}
+.fact-card{background:var(--surf2);border:1px solid var(--bord);border-radius:var(--r-xl);padding:var(--space-5)}
+.fact-icon{font-size:1.6em;margin-bottom:var(--space-3)}
+.fact-title{font-family:var(--font-d);font-weight:700;font-size:var(--text-sm);color:var(--tp);margin-bottom:var(--space-2)}
+.fact-body{font-size:var(--text-sm);color:var(--tm);line-height:1.6}
+.fact-body strong{color:var(--tp)}
+
+footer{border-top:1px solid var(--bord);padding-block:var(--space-8);text-align:center}
+.f-logo{display:inline-flex;align-items:center;gap:var(--space-2);font-family:var(--font-d);font-weight:700;font-size:var(--text-base);color:var(--tm);margin-bottom:var(--space-3)}
+.f-note{font-size:var(--text-xs);color:var(--tf);max-width:60ch;margin:auto}
+
+@media(max-width:640px){.nav-links{display:none}.kpi-row{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-label="Россети">
+          <rect width="28" height="28" rx="6" fill="#1565c0"/>
+          <path d="M5 14L14 5L23 14L14 23Z" fill="none" stroke="white" stroke-width="2.5"/>
+          <circle cx="14" cy="14" r="3.5" fill="white"/>
+          <line x1="14" y1="5" x2="14" y2="2" stroke="#60bbf5" stroke-width="2" stroke-linecap="round"/>
+          <line x1="23" y1="14" x2="26" y2="14" stroke="#60bbf5" stroke-width="2" stroke-linecap="round"/>
+          <line x1="14" y1="23" x2="14" y2="26" stroke="#60bbf5" stroke-width="2" stroke-linecap="round"/>
+          <line x1="5" y1="14" x2="2" y2="14" stroke="#60bbf5" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Россети
+      </a>
+      <div class="nav-links">
+        <a href="#ownership">Акционеры</a>
+        <a href="#structure">Холдинг</a>
+        <a href="#financials">Финансы</a>
+        <a href="#about">О компании</a>
+      </div>
+      <button class="theme-btn" data-theme-toggle aria-label="Переключить тему">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="container hero-content">
+    <div class="hero-badge">⚡ Электросетевой холдинг России</div>
+    <h1>ПАО <span class="at">«Россети»</span> — государственная монополия</h1>
+    <p class="hero-desc">Крупнейший в России оператор электрических сетей, контролируемый государством (75%+). Управляет 80% всей электроэнергии страны в 82 регионах. Кликни на любую дочку — раскроется её структура до уровня городских предприятий.</p>
+    <div class="kpi-row">
+      <div class="kpi-card" style="--kc:#2196f3"><div class="kpi-val">75%+1</div><div class="kpi-lbl">Доля государства</div><div class="kpi-sub">Росимущество напрямую</div></div>
+      <div class="kpi-card" style="--kc:#4caf50"><div class="kpi-val">1,83 трлн ₽</div><div class="kpi-lbl">Выручка 2025</div><div class="kpi-sub">+22% к 2024 г.</div></div>
+      <div class="kpi-card" style="--kc:#9c27b0"><div class="kpi-val">203 млрд ₽</div><div class="kpi-lbl">Прибыль 2025 МСФО</div><div class="kpi-sub">Возврат к прибыли</div></div>
+      <div class="kpi-card" style="--kc:#ff9800"><div class="kpi-val">2,6 млн км</div><div class="kpi-lbl">Линии ЛЭП</div><div class="kpi-sub">600 тыс. подстанций</div></div>
+      <div class="kpi-card" style="--kc:#00bcd4"><div class="kpi-val">235 тыс.</div><div class="kpi-lbl">Сотрудников</div><div class="kpi-sub">82 региона РФ</div></div>
+      <div class="kpi-card" style="--kc:#f44336"><div class="kpi-val">857 млрд ₽</div><div class="kpi-lbl">Инвестпрограмма 2026</div><div class="kpi-sub">+18% к 2025 году</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- OWNERSHIP -->
+<section id="ownership">
+  <div class="container">
+    <div class="sec-badge">Структура владения</div>
+    <h2 class="sec-title">Кому принадлежат «Россети»?</h2>
+    <p class="sec-desc">Российская Федерация владеет контрольным и квалифицированным (75%+1) пакетом напрямую через Росимущество. Акции торгуются на Мосбирже, но де-факто это государственная корпорация.</p>
+    <div class="own-layout">
+      <div>
+        <div class="donut-wrap">
+          <canvas id="ownChart" aria-label="Акционеры Россети" role="img"></canvas>
+          <div class="donut-center"><div class="donut-pct">75%</div><div class="donut-sub">государство</div></div>
+        </div>
+      </div>
+      <div class="own-legend">
+        <div class="leg-item">
+          <div class="leg-dot" style="background:#2196f3"></div>
+          <div><div class="leg-name">Российская Федерация (Росимущество)</div><div class="leg-note">Прямой контроль, стратегический акционер. Назначает менеджмент.</div></div>
+          <div class="leg-pct">75.0%</div>
+        </div>
+        <div class="leg-item">
+          <div class="leg-dot" style="background:#607d8b"></div>
+          <div><div class="leg-name">Казначейские акции группы</div><div class="leg-note">ООО «ФСК–Управление активами» и аффилированные структуры</div></div>
+          <div class="leg-pct">~7%</div>
+        </div>
+        <div class="leg-item">
+          <div class="leg-dot" style="background:#90a4ae"></div>
+          <div><div class="leg-name">Миноритарии (free-float)</div><div class="leg-note">Физлица, юрлица-резиденты, нерезиденты. Торгуются на Мосбирже (FEES).</div></div>
+          <div class="leg-pct">~18%</div>
+        </div>
+        <div style="margin-top:var(--space-3);padding:var(--space-4);background:var(--surf2);border-radius:var(--r-lg);border:1px solid var(--bord);font-size:var(--text-sm);color:var(--tm);line-height:1.6">
+          <strong style="color:var(--tp)">Принцип «матрёшки»:</strong> государство → ПАО Россети → 17 дочерних компаний. Даже там, где прямого госпакета нет, контроль осуществляется опосредованно — через головную компанию.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE TREE -->
+<section id="structure">
+  <div class="container">
+    <div class="sec-badge">Организационная структура</div>
+    <h2 class="sec-title">Холдинг «Россети» — интерактивное дерево</h2>
+    <p class="sec-desc">Нажмите на любую дочернюю компанию, чтобы раскрыть её структуру: филиалы, города присутствия и ключевые факты о каждом предприятии.</p>
+
+    <div class="tree-legend">
+      <div class="tleg ta"><div class="tleg-dot"></div>&gt;80% — почти полное владение</div>
+      <div class="tleg tb"><div class="tleg-dot"></div>50–80% — контрольный пакет</div>
+      <div class="tleg tc"><div class="tleg-dot"></div>&lt;50% — блокирующий пакет</div>
+    </div>
+
+    <div class="tree-outer" aria-label="Организационная структура группы Россети">
+      <div class="tree-root">
+
+        <!-- PAO ROOT NODE -->
+        <div style="display:flex;gap:32px;justify-content:center;align-items:flex-end">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="background:var(--surf2);border:1px solid var(--bord);border-radius:var(--r-xl);padding:var(--space-3) var(--space-5);text-align:center;min-width:140px">
+              <div style="font-size:.85em">🏛️</div>
+              <div style="font-family:var(--font-d);font-weight:700;font-size:.8rem;color:var(--tp)">Российская Федерация</div>
+              <div style="font-size:.65rem;color:var(--tm)">Росимущество</div>
+              <span style="display:inline-block;margin-top:6px;padding:2px 8px;border-radius:var(--r-full);font-size:.7rem;font-weight:700;background:rgba(33,150,243,.15);color:#60bbf5">75% + 1 акция</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="background:var(--surf2);border:1px solid var(--bord);border-radius:var(--r-xl);padding:var(--space-3) var(--space-5);text-align:center;min-width:130px">
+              <div style="font-size:.85em">👥</div>
+              <div style="font-family:var(--font-d);font-weight:700;font-size:.8rem;color:var(--tp)">Миноритарии</div>
+              <div style="font-size:.65rem;color:var(--tm)">free-float + казна</div>
+              <span style="display:inline-block;margin-top:6px;padding:2px 8px;border-radius:var(--r-full);font-size:.7rem;font-weight:700;background:rgba(144,164,174,.15);color:#90a4ae">~25%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- connectors to PAO -->
+        <div style="height:28px;display:flex;align-items:flex-end;justify-content:center;width:100%;position:relative">
+          <svg width="200" height="28" style="overflow:visible" aria-hidden="true">
+            <line x1="60" y1="0" x2="60" y2="28" stroke="rgba(33,150,243,.5)" stroke-width="2"/>
+            <line x1="140" y1="0" x2="140" y2="18" stroke="var(--bord2)" stroke-width="2" stroke-dasharray="4,3"/>
+            <line x1="60" y1="28" x2="140" y2="28" stroke="var(--bord2)" stroke-width="1.5" opacity=".5"/>
+          </svg>
+        </div>
+
+        <!-- PAO ROSSETI -->
+        <div class="tn-root">
+          <div style="display:flex;align-items:center;gap:var(--space-3);justify-content:center">
+            <svg width="30" height="30" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect width="28" height="28" rx="6" fill="#1565c0"/><path d="M5 14L14 5L23 14L14 23Z" fill="none" stroke="white" stroke-width="2.5"/><circle cx="14" cy="14" r="3.5" fill="white"/></svg>
+            <div>
+              <div class="tn-root-title">ПАО «Россети»</div>
+              <div class="tn-root-sub">Федеральная сетевая компания · Москва, ул. Беловежская 4</div>
+            </div>
+          </div>
+          <div class="tn-root-badges">
+            <span class="tn-badge" style="background:rgba(33,150,243,.12);color:#64b5f6">Тикер: FEES</span>
+            <span class="tn-badge" style="background:rgba(76,175,80,.1);color:#81c784">Монополия</span>
+            <span class="tn-badge" style="background:rgba(255,152,0,.1);color:#ffb74d">39 ДЗО</span>
+            <span class="tn-badge" style="background:rgba(156,39,176,.1);color:#ce93d8">82 региона</span>
+          </div>
+        </div>
+
+        <div class="vc vc-20"></div>
+
+        <!-- Horizontal connector across all MRSK -->
+        <div style="height:0;width:100%;border-top:2px solid var(--bord2)"></div>
+
+        <!-- MRSK nodes row -->
+        <div style="width:100%;display:flex;gap:0">
+          <div id="mrskRow" class="mrsk-row" style="flex-wrap:nowrap;width:100%;padding-top:0"></div>
+        </div>
+
+        <!-- Expand panel -->
+        <div id="expandPanel">
+          <div class="expand-inner">
+            <div class="ep-header">
+              <div class="ep-title-wrap">
+                <div class="ep-name" id="epName">—</div>
+                <div class="ep-meta" id="epMeta"></div>
+              </div>
+              <button class="ep-close" id="epClose" aria-label="Закрыть">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <div class="ep-kpis" id="epKpis"></div>
+            <div class="ep-subtitle">Филиалы и предприятия</div>
+            <div class="branches-list" id="branchesList"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINANCIALS -->
+<section id="financials">
+  <div class="container">
+    <div class="sec-badge">Финансы</div>
+    <h2 class="sec-title">Ключевые финансовые показатели</h2>
+    <p class="sec-desc">2025 год — возврат к прибыли после убытка в 2024-м. Выручка +22%, EBITDA +29%, инвестпрограмма 2026 — рекордные 857 млрд ₽.</p>
+    <div class="fin-grid">
+      <div class="fin-box">
+        <div class="fin-title">Выручка по МСФО (трлн ₽)</div>
+        <div class="fin-sub">Динамика 2022–2025</div>
+        <div class="chart-wrap"><canvas id="revChart" role="img" aria-label="Выручка Россети"></canvas></div>
+      </div>
+      <div class="fin-box">
+        <div class="fin-title">Чистая прибыль / убыток (млрд ₽)</div>
+        <div class="fin-sub">МСФО 2022–2025</div>
+        <div class="chart-wrap"><canvas id="profChart" role="img" aria-label="Прибыль Россети"></canvas></div>
+      </div>
+      <div class="fin-box">
+        <div class="fin-title">EBITDA (млрд ₽)</div>
+        <div class="fin-sub">Рост операционного денежного потока</div>
+        <div class="chart-wrap"><canvas id="ebitChart" role="img" aria-label="EBITDA"></canvas></div>
+      </div>
+      <div class="fin-box">
+        <div class="fin-title">Инвестпрограмма (млрд ₽)</div>
+        <div class="fin-sub">Факт 2024–2025 + план 2026–2029</div>
+        <div class="chart-wrap"><canvas id="capChart" role="img" aria-label="Инвестпрограмма"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="sec-badge">О компании</div>
+    <h2 class="sec-title">Факты и контекст</h2>
+    <p class="sec-desc">После реорганизации 2023 года магистральные и распределительные сети объединены в единую структуру.</p>
+    <div class="facts-grid">
+      <div class="fact-card"><div class="fact-icon">📅</div><div class="fact-title">История</div><div class="fact-body">Основана в <strong>2002 г.</strong> как «Холдинг МРСК». В <strong>2013</strong> переименована в «Россети». В <strong>январе 2023</strong> ФСК ЕЭС и Россети объединены в ПАО «ФСК – Россети».</div></div>
+      <div class="fact-card"><div class="fact-icon">⚡</div><div class="fact-title">Масштаб</div><div class="fact-body">Через сети Группы передаётся <strong>&gt;80%</strong> всей электроэнергии России. <strong>600 тыс.</strong> подстанций, <strong>900 ГВА</strong> трансформаторная мощность.</div></div>
+      <div class="fact-card"><div class="fact-icon">🏦</div><div class="fact-title">Статус</div><div class="fact-body">Субъект <strong>естественной монополии</strong>. Тарифы регулирует ФАС России. ПАО торгуется на <strong>Мосбирже (FEES)</strong>. Государство — мажоритарий.</div></div>
+      <div class="fact-card"><div class="fact-icon">👔</div><div class="fact-title">Руководство</div><div class="fact-body">Генеральный директор — <strong>Андрей Рюмин</strong>. Штаб-квартира — Москва, ул. Беловежская 4. Персонал — <strong>~235 тыс. человек</strong>.</div></div>
+      <div class="fact-card"><div class="fact-icon">🌍</div><div class="fact-title">Международный контекст</div><div class="fact-body">Одна из крупнейших электросетевых компаний мира. Указом Путина (февраль 2025) разрешены сделки с акциями из «недружественных» стран.</div></div>
+      <div class="fact-card"><div class="fact-icon">📈</div><div class="fact-title">Долг</div><div class="fact-body">Долг группы вырос с <strong>741 до 830 млрд ₽</strong> (2024→2025). Рост связан с масштабной инвестпрограммой модернизации сетей.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="f-logo"><svg width="18" height="18" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect width="28" height="28" rx="6" fill="#1565c0"/><path d="M5 14L14 5L23 14L14 23Z" fill="none" stroke="white" stroke-width="2.5"/><circle cx="14" cy="14" r="3.5" fill="white"/></svg>Россети — справочный дашборд</div>
+    <p class="f-note">Данные: годовые отчёты ПАО «Россети» 2023–2025, Interfax, Ведомости, Forbes, rosseti.ru, russprofile.ru. Актуально на июнь 2026 г.</p>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════ */
+const MRSK_DATA = [
+  {
+    id:'sk', name:'Россети\nСев. Кавказ', tier:'ta', stake:'99.76%',
+    fullName:'ПАО «Россети Северный Кавказ»', hq:'Пятигорск', ticker:'MRKK',
+    kpis:[
+      {val:'99.76%',lbl:'Доля «Россетей»'},
+      {val:'6 респ.',lbl:'Регионов СКФО'},
+      {val:'Пятигорск',lbl:'Штаб-квартира'},
+      {val:'MRKK',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Каббалкэнерго', city:'Нальчик', region:'КБР', facts:[
+        {l:'Адрес',v:'г. Нальчик, ул. Головко, 9'},{l:'Зона',v:'Кабардино-Балкарская Республика'},{l:'Тип',v:'Распределительные сети 0.4–110 кВ'},
+      ], also:'Обслуживает промышленность и ЖКХ Нальчика'},
+      {name:'Карачаево-Черкесскэнерго', city:'Черкесск', region:'КЧР', facts:[
+        {l:'Адрес',v:'г. Черкесск, пр. Ленина, 115'},{l:'Зона',v:'Карачаево-Черкесская Республика'},{l:'Тип',v:'Горные районы и предгорья'},
+      ], also:'Включает сети горнолыжных курортов Домбай и Архыз'},
+      {name:'Дагэнерго', city:'Махачкала', region:'Дагестан', facts:[
+        {l:'Адрес',v:'г. Махачкала, ул. Ермошкина, 56'},{l:'Зона',v:'Республика Дагестан — самый большой субъект СКФО'},{l:'Особ.',v:'Береговая зона Каспия'},
+      ], also:'Крупнейший филиал компании, обслуживает ~3 млн человек'},
+      {name:'Ингушэнерго', city:'Назрань', region:'Ингушетия', facts:[
+        {l:'Адрес',v:'г. Назрань, ул. Осканова, 32'},{l:'Зона',v:'Республика Ингушетия'},{l:'Тип',v:'Распределение и снижение потерь'},
+      ], also:'Ведётся масштабная реконструкция сетей'},
+      {name:'Севкавказэнерго', city:'Владикавказ', region:'Сев. Осетия', facts:[
+        {l:'Адрес',v:'г. Владикавказ, пр. Коста, 13'},{l:'Зона',v:'Республика Северная Осетия'},{l:'Тип',v:'Горные и равнинные сети'},
+      ], also:'Реализует программу цифровизации сетей'},
+      {name:'Чеченэнерго', city:'Грозный', region:'Чечня', facts:[
+        {l:'Адрес',v:'г. Грозный, пр. Кадырова'},{l:'Зона',v:'Чеченская Республика'},{l:'Тип',v:'Восстановление и модернизация сетей'},
+      ], also:'Интенсивная инвестпрограмма — строительство новых подстанций'},
+    ]
+  },
+  {
+    id:'kub', name:'Россети\nКубань', tier:'ta', stake:'99.72%',
+    fullName:'ПАО «Россети Кубань»', hq:'Краснодар', ticker:'KUBE',
+    kpis:[
+      {val:'99.72%',lbl:'Доля «Россетей»'},
+      {val:'11 фил.',lbl:'Филиалов'},
+      {val:'Краснодар',lbl:'Штаб-квартира'},
+      {val:'KUBE',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Краснодарские электрические сети', city:'Краснодар', region:'Краснодарский край', facts:[
+        {l:'Адрес',v:'г. Краснодар, ул. Пашковская, 131'},{l:'Зона',v:'г. Краснодар и пригород'},{l:'Директор',v:'Герасько А.Л.'},
+      ], also:'Крупнейший по объёму передачи энергии в Кубани'},
+      {name:'Сочинские электрические сети', city:'Сочи', region:'Краснодарский край', facts:[
+        {l:'Адрес',v:'г. Сочи, ул. Конституции СССР, 42'},{l:'Зона',v:'г. Сочи и черноморское побережье'},{l:'Директор',v:'Армаганян Э.Г.'},
+      ], also:'Питает стадионы, аэропорт, горнолыжные курорты Сочи'},
+      {name:'Армавирские электрические сети', city:'Армавир', region:'Краснодарский край', facts:[
+        {l:'Адрес',v:'г. Армавир, ул. Воровского, 54'},{l:'Директор',v:'Десятова Н.М.'},
+      ], also:'Промышленные предприятия и агрокомплексы Армавира'},
+      {name:'Лабинские электрические сети', city:'Лабинск', region:'Краснодарский край', facts:[
+        {l:'Адрес',v:'г. Лабинск, ул. Мира, 334'},{l:'Зона',v:'Предгорья и долины юга Краснодарского края'},
+      ], also:'Сельские и горные сети предгорной зоны'},
+      {name:'Тихорецкие электрические сети', city:'Тихорецк', region:'Краснодарский край', facts:[
+        {l:'Адрес',v:'г. Тихорецк, ул. Дзержинского, 62'},{l:'Директор',v:'Гондарь В.В.'},
+      ], also:'Узловой распределительный центр восточной Кубани'},
+      {name:'Юго-Западные электрические сети', city:'Новороссийск', region:'Краснодарский край', facts:[
+        {l:'Адрес',v:'г. Новороссийск, Восточный мол, 1'},{l:'Зона',v:'Порт и промзона Новороссийска'},
+      ], also:'Питает крупнейший нефтяной терминал России (Шесхарис)'},
+      {name:'Адыгейские электрические сети', city:'Майкоп', region:'Респ. Адыгея', facts:[
+        {l:'Адрес',v:'г. Майкоп, ул. Шовгенова, 358'},{l:'Директор',v:'Рязанцев Д.Ю.'},
+      ], also:'Отдельный субъект РФ (Республика Адыгея)'},
+    ]
+  },
+  {
+    id:'tom', name:'Россети\nТомск', tier:'ta', stake:'86.40%',
+    fullName:'АО «Россети Томск» (ТДСК)', hq:'Томск', ticker:'TORS',
+    kpis:[
+      {val:'86.40%',lbl:'Доля «Россетей»'},
+      {val:'Томск',lbl:'Штаб-квартира'},
+      {val:'4 филиала',lbl:'В структуре'},
+      {val:'TORS',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Томские электрические сети', city:'Томск', region:'Томская обл.', facts:[
+        {l:'Зона',v:'г. Томск и Томский район'},{l:'Тип',v:'Кабельные и воздушные сети 0.4–110 кВ'},
+      ], also:'Обслуживает Томский научно-образовательный комплекс (ТГУ, ТПУ, НИИ)'},
+      {name:'Северные электрические сети', city:'Стрежевой', region:'Томская обл.', facts:[
+        {l:'Зона',v:'Нефтяные промыслы севера Томской обл.'},{l:'Тип',v:'Промышленные сети в условиях Сибири'},
+      ], also:'Питает нефтепромыслы Роснефти и Газпромнефти'},
+      {name:'Восточные электрические сети', city:'Асино', region:'Томская обл.', facts:[
+        {l:'Зона',v:'Восточные и таёжные районы Томской обл.'},
+      ], also:'Лесозаготовительные и сельские районы востока области'},
+      {name:'Южные электрические сети', city:'Томск', region:'Томская обл.', facts:[
+        {l:'Зона',v:'Пригородные и южные районы г. Томска'},
+      ], also:'Агропромышленный пояс региона'},
+    ]
+  },
+  {
+    id:'len', name:'Россети\nЛенэнерго', tier:'tb', stake:'69.36%',
+    fullName:'ПАО «Россети Ленэнерго»', hq:'Санкт-Петербург', ticker:'LSNG',
+    kpis:[
+      {val:'69.36%',lbl:'Доля «Россетей»'},
+      {val:'1886 г.',lbl:'Год основания'},
+      {val:'СПб + ЛО',lbl:'Регионы'},
+      {val:'LSNG',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Кабельная сеть', city:'Санкт-Петербург', region:'СПб', facts:[
+        {l:'Адрес',v:'СПб, 1-й Муринский пр., 7'},{l:'Тип',v:'Подземные кабельные линии 6–110 кВ'},{l:'Зона',v:'Центральные районы Санкт-Петербурга'},
+      ], also:'Исторический центр, Петроградская, Васильевский остров'},
+      {name:'Выборгские электрические сети', city:'Выборг', region:'Ленинградская обл.', facts:[
+        {l:'Адрес',v:'г. Выборг, ул. Северный вал, 5'},{l:'Зона',v:'Выборгский и Приозерский районы'},
+      ], also:'Приграничные территории Ленобласти, туристические зоны'},
+      {name:'Гатчинские электрические сети', city:'Гатчина', region:'Ленинградская обл.', facts:[
+        {l:'Зона',v:'Гатчинский и Лужский районы'},{l:'Тип',v:'Воздушные и кабельные сети'},
+      ], also:'Обслуживает особую экономическую зону «Пушкин»'},
+      {name:'Карельские электрические сети', city:'Приозерск', region:'Ленинградская обл.', facts:[
+        {l:'Зона',v:'Северо-восток Ленинградской обл.'},{l:'Тип',v:'Лесопромышленные районы'},
+      ], also:'Приграничные районы у Ладожского озера'},
+      {name:'Кировские электрические сети', city:'Кировск', region:'Ленинградская обл.', facts:[
+        {l:'Зона',v:'Кировский и Волховский районы'},{l:'Тип',v:'Промышленные потребители'},
+      ], also:'Питает Волховский алюминиевый завод (старейший в России)'},
+      {name:'Тосненские электрические сети', city:'Тосно', region:'Ленинградская обл.', facts:[
+        {l:'Зона',v:'Тосненский и Лужский районы'},{l:'Тип',v:'Пригороды и транспортные коридоры'},
+      ], also:'М10 (Москва–СПб), индустриальные парки Тосненского района'},
+    ]
+  },
+  {
+    id:'sib', name:'Россети\nСибирь', tier:'tb', stake:'57.90%',
+    fullName:'ПАО «Россети Сибирь»', hq:'Красноярск', ticker:'MRKS',
+    kpis:[
+      {val:'57.90%',lbl:'Доля «Россетей»'},
+      {val:'9 регионов',lbl:'Сибирь и Тыва'},
+      {val:'Красноярск',lbl:'Штаб-квартира'},
+      {val:'MRKS',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Красноярскэнерго', city:'Красноярск', region:'Красноярский край', facts:[
+        {l:'Зона',v:'г. Красноярск и Красноярский край'},{l:'Тип',v:'Распределительные сети в крупнейшем регионе Сибири'},
+      ], also:'Питает КРАЗ (Красноярский алюминиевый завод), Норникель'},
+      {name:'Алтайэнерго', city:'Барнаул', region:'Алтайский край', facts:[
+        {l:'Зона',v:'Алтайский край'},{l:'Тип',v:'Аграрный регион, большие расстояния'},
+      ], also:'Обслуживает агропромышленный комплекс Алтая'},
+      {name:'Бурятэнерго', city:'Улан-Удэ', region:'Республика Бурятия', facts:[
+        {l:'Зона',v:'Республика Бурятия + зона Байкала'},{l:'Тип',v:'Байкальская экозона, требования экологии'},
+      ], also:'Питает туристическую зону Байкала и ОЭЗ «Байкальская гавань»'},
+      {name:'Горно-Алтайские электросети', city:'Горно-Алтайск', region:'Республика Алтай', facts:[
+        {l:'Зона',v:'Республика Алтай — горный регион'},{l:'Тип',v:'Горные сети в труднодоступных районах'},
+      ], also:'Электроснабжение горнолыжных курортов (Белокуриха, Манжерок)'},
+      {name:'Хакасэнерго', city:'Абакан', region:'Республика Хакасия', facts:[
+        {l:'Зона',v:'Республика Хакасия'},{l:'Тип',v:'Промышленные и сельские сети'},
+      ], also:'Питает Саяно-Шушенскую ГЭС и алюминиевое производство'},
+      {name:'Кузбассэнерго', city:'Кемерово', region:'Кемеровская обл.', facts:[
+        {l:'Зона',v:'Кемеровская обл. (Кузбасс)'},{l:'Тип',v:'Промышленные сети шахт и металлургии'},
+      ], also:'Крупнейший угольный регион России, сеть шахт и обогатительных фабрик'},
+    ]
+  },
+  {
+    id:'sz', name:'Россети\nСев.-Запад', tier:'tb', stake:'55.38%',
+    fullName:'ПАО «Россети Северо-Запад»', hq:'Санкт-Петербург', ticker:'MRKZ',
+    kpis:[
+      {val:'55.38%',lbl:'Доля «Россетей»'},
+      {val:'6 регионов',lbl:'СЗФО'},
+      {val:'СПб',lbl:'Штаб-квартира'},
+      {val:'MRKZ',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Архэнерго', city:'Архангельск', region:'Архангельская обл.', facts:[
+        {l:'Зона',v:'Архангельская область'},{l:'Тип',v:'Арктические и лесопромышленные сети'},
+      ], also:'Электроснабжение лесозаготовительных предприятий, морского порта'},
+      {name:'Вологдаэнерго', city:'Вологда', region:'Вологодская обл.', facts:[
+        {l:'Зона',v:'Вологодская область'},{l:'Тип',v:'Металлургия (Северсталь) и аграрный сектор'},
+      ], also:'Питает Череповецкий металлургический комбинат Северсталь'},
+      {name:'Псковэнерго', city:'Псков', region:'Псковская обл.', facts:[
+        {l:'Зона',v:'Псковская область, приграничная территория'},{l:'Тип',v:'Экспортные линии и приграничная инфраструктура'},
+      ], also:'Граничит с Эстонией и Латвией — сети бывшего энергокольца БРЭЛЛ'},
+      {name:'Карелэнерго', city:'Петрозаводск', region:'Республика Карелия', facts:[
+        {l:'Зона',v:'Республика Карелия'},{l:'Тип',v:'Лесная и горнодобывающая промышленность'},
+      ], also:'Питает горно-химические предприятия и туристическую зону Карелии'},
+      {name:'Колэнерго', city:'Мурманск', region:'Мурманская обл.', facts:[
+        {l:'Зона',v:'Мурманская область — Кольский полуостров'},{l:'Тип',v:'Арктические условия, горнодобыча'},
+      ], also:'Питает Кольскую АЭС, Норникель (Кольское подразделение)'},
+      {name:'Новгородэнерго', city:'Великий Новгород', region:'Новгородская обл.', facts:[
+        {l:'Зона',v:'Новгородская область'},{l:'Тип',v:'Малые и средние промышленные потребители'},
+      ], also:'Промышленные предприятия и туристические объекты'},
+    ]
+  },
+  {
+    id:'ural', name:'Россети\nУрал', tier:'tb', stake:'55.23%',
+    fullName:'ПАО «Россети Урал»', hq:'Екатеринбург', ticker:'MRKU',
+    kpis:[
+      {val:'55.23%',lbl:'Доля «Россетей»'},
+      {val:'16.45%',lbl:'Меткомбанк'},
+      {val:'Екатеринбург',lbl:'Штаб-квартира'},
+      {val:'MRKU',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Свердловэнерго', city:'Екатеринбург', region:'Свердловская обл.', facts:[
+        {l:'Зона',v:'г. Екатеринбург и Свердловская обл.'},{l:'Тип',v:'Металлургия, машиностроение, ВПК'},
+      ], also:'Питает УГМК, ВСМПО-АВИСМА, Уралмашзавод'},
+      {name:'Пермэнерго', city:'Пермь', region:'Пермский край', facts:[
+        {l:'Зона',v:'Пермский край'},{l:'Тип',v:'Нефтехимия, калийная промышленность'},
+      ], also:'Лукойл (Пермь), Уралкалий, «Пермские моторы»'},
+      {name:'Челябинскэнерго', city:'Челябинск', region:'Челябинская обл.', facts:[
+        {l:'Зона',v:'Челябинская область'},{l:'Тип',v:'Металлургическое сердце России'},
+      ], also:'ММК (Магнитогорский металлург. комбинат), ЧМЗАП'},
+    ]
+  },
+  {
+    id:'cent', name:'Россети\nЦентр', tier:'tb', stake:'50.69%',
+    fullName:'ПАО «Россети Центр»', hq:'Москва', ticker:'MRKC',
+    kpis:[
+      {val:'50.69%',lbl:'Доля «Россетей»'},
+      {val:'11 фил.',lbl:'Филиалов'},
+      {val:'Москва',lbl:'Штаб-квартира'},
+      {val:'MRKC',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Воронежэнерго', city:'Воронеж', region:'Воронежская обл.', facts:[
+        {l:'Зона',v:'Воронежская обл., 52.2 тыс. кв.км'},{l:'Население',v:'2.33 млн человек'},{l:'Особ.',v:'Единственный млн-ник в ЦФО кроме Москвы'},
+      ], also:'Обслуживает Воронежский авиационный завод, ВАСО, ядерный центр'},
+      {name:'Белгородэнерго', city:'Белгород', region:'Белгородская обл.', facts:[
+        {l:'Зона',v:'Белгородская область'},{l:'Тип',v:'Металлургия, ОПК'},
+      ], also:'Питает ОЭМК (Оскольский электрометаллургический комбинат)'},
+      {name:'Брянскэнерго', city:'Брянск', region:'Брянская обл.', facts:[
+        {l:'Зона',v:'Брянская область'},{l:'Тип',v:'Машиностроение, ВПК'},
+      ], also:'Брянский автомобильный завод (военная техника)'},
+      {name:'Курскэнерго', city:'Курск', region:'Курская обл.', facts:[
+        {l:'Зона',v:'Курская область'},{l:'Тип',v:'АПК и ядерная энергетика'},
+      ], also:'Питает Курскую АЭС (соседние сети), горнодобывающий КМА'},
+      {name:'Тверьэнерго', city:'Тверь', region:'Тверская обл.', facts:[
+        {l:'Зона',v:'Тверская область'},{l:'Тип',v:'Транзит и распределение'},
+      ], also:'Транзитный коридор Москва–СПб, Тверской вагоностроительный завод'},
+      {name:'Смоленскэнерго', city:'Смоленск', region:'Смоленская обл.', facts:[
+        {l:'Зона',v:'Смоленская область'},{l:'Тип',v:'Транзит и атомная энергетика'},
+      ], also:'Смоленская АЭС и приграничная инфраструктура'},
+      {name:'Ярэнерго', city:'Ярославль', region:'Ярославская обл.', facts:[
+        {l:'Зона',v:'Ярославская область'},{l:'Тип',v:'Нефтехимия, туризм'},
+      ], also:'НПЗ «Газпром нефти», «Золотое кольцо» (туристический кластер)'},
+      {name:'Костромаэнерго', city:'Кострома', region:'Костромская обл.', facts:[
+        {l:'Зона',v:'Костромская область'},
+      ], also:'Костромская ГРЭС, льняная промышленность, туризм'},
+    ]
+  },
+  {
+    id:'cp', name:'Россети\nЦ. и Приволжье', tier:'tb', stake:'50.41%',
+    fullName:'ПАО «Россети Центр и Приволжье»', hq:'Нижний Новгород', ticker:'MRKP',
+    kpis:[
+      {val:'50.41%',lbl:'Доля «Россетей»'},
+      {val:'9 регионов',lbl:'ПФО + ЦФО'},
+      {val:'Н. Новгород',lbl:'Штаб-квартира'},
+      {val:'MRKP',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Нижновэнерго', city:'Нижний Новгород', region:'Нижегородская обл.', facts:[
+        {l:'Зона',v:'Нижегородская обл. (1.2 млн жителей Н. Новгорода)'},{l:'Тип',v:'Крупная промышленность, ВПК'},
+      ], also:'ГАЗ, «Красное Сормово» (подводные лодки), завод Чкалова'},
+      {name:'Владимирэнерго', city:'Владимир', region:'Владимирская обл.', facts:[
+        {l:'Зона',v:'Владимирская область'},{l:'Адрес',v:'г. Владимир, ул. Большая Нижегородская, 106'},
+      ], also:'Туристический «Золотое кольцо», стекольные и химические заводы'},
+      {name:'Ивэнерго', city:'Иваново', region:'Ивановская обл.', facts:[
+        {l:'Зона',v:'Ивановская область'},{l:'Тип',v:'Текстиль и малый бизнес'},
+      ], also:'«Текстильный центр России», масштабная реконструкция сетей'},
+      {name:'Калугаэнерго', city:'Калуга', region:'Калужская обл.', facts:[
+        {l:'Зона',v:'Калужская область'},{l:'Тип',v:'Автопром, ИТ-кластер'},
+      ], also:'Питает VOLKSWAGEN (Калуга), Samsung, Volvo, калужский фармкластер'},
+      {name:'Кировэнерго', city:'Киров', region:'Кировская обл.', facts:[
+        {l:'Адрес',v:'г. Киров, ул. Спасская'},{l:'Зона',v:'Кировская область'},
+      ], also:'Металлургия, химпром, деревообработка — крупная промышленность ПФО'},
+      {name:'Рязаньэнерго', city:'Рязань', region:'Рязанская обл.', facts:[
+        {l:'Зона',v:'Рязанская область'},{l:'Тип',v:'Нефтепереработка, ВПК'},
+      ], also:'Рязанский НПЗ (Роснефть), Рязанский завод металлокерамических приборов'},
+      {name:'Мариэнерго', city:'Йошкар-Ола', region:'Республика Марий Эл', facts:[
+        {l:'Зона',v:'Республика Марий Эл'},{l:'Тип',v:'Лесопромышленный регион'},
+      ], also:'Марийский лесопромышленный комплекс'},
+      {name:'Тульэнерго', city:'Тула', region:'Тульская обл.', facts:[
+        {l:'Зона',v:'Тульская область'},{l:'Тип',v:'ВПК и металлургия'},
+      ], also:'«Тульский оружейный завод», «Тулачермет», Алексинская ГРЭС'},
+      {name:'Удмуртэнерго', city:'Ижевск', region:'Удмуртская Республика', facts:[
+        {l:'Адрес',v:'г. Ижевск, ул. Советская, 30'},{l:'Зона',v:'Удмуртская Республика'},
+      ], also:'Концерн «Калашников», ижевский автозавод ИжАвто'},
+    ]
+  },
+  {
+    id:'mr', name:'Россети\nМоск. регион', tier:'tc', stake:'50.90%',
+    fullName:'ПАО «Россети Московский регион»', hq:'Москва', ticker:'MSRS',
+    kpis:[
+      {val:'50.90%',lbl:'Доля «Россетей»'},
+      {val:'7 фил.',lbl:'Филиалов'},
+      {val:'Москва',lbl:'Штаб-квартира'},
+      {val:'MSRS',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Центральные электрические сети', city:'Москва', region:'МО', facts:[
+        {l:'Зона',v:'Центральный пояс Московской области'},{l:'Тип',v:'Пригородные и транзитные сети'},
+      ], also:'Подмосковные города — Одинцово, Красногорск, Химки, Долгопрудный'},
+      {name:'Западные электрические сети', city:'Москва', region:'МО', facts:[
+        {l:'Зона',v:'Западный пояс МО — Наро-Фоминск, Звенигород'},{l:'Тип',v:'Загородная недвижимость, дачный пояс'},
+      ], also:'Новорижское и Минское шоссе, крупные логистические парки'},
+      {name:'Восточные электрические сети', city:'Мытищи', region:'МО', facts:[
+        {l:'Зона',v:'Восточный пояс МО — Мытищи, Балашиха, Ногинск'},{l:'Тип',v:'Промышленность, складской кластер'},
+      ], also:'Склады Wildberries и OZON, дата-центры Подмосковья'},
+      {name:'Северные электрические сети', city:'Дмитров', region:'МО', facts:[
+        {l:'Зона',v:'Дмитровское и Дубненское направление'},{l:'Тип',v:'Индустриальные парки, туризм'},
+      ], also:'Дмитровский кластер, горнолыжные комплексы Яхрома и Сорочаны'},
+      {name:'Южные электрические сети', city:'Домодедово', region:'МО', facts:[
+        {l:'Зона',v:'Южный пояс МО, аэропорт Домодедово'},{l:'Тип',v:'Транспортный узел и логистика'},
+      ], also:'Питает аэропорт Домодедово — второй по пассажиропотоку в России'},
+      {name:'Юго-Восточные электрические сети', city:'Люберцы', region:'МО', facts:[
+        {l:'Зона',v:'Люберцы, Раменское, Жуковский'},{l:'Тип',v:'ВПК, авиация, жильё'},
+      ], also:'ЛИИ им. Громова (Жуковский), корпорация МиГ, ВПК'},
+      {name:'Юго-Западные электрические сети', city:'Серпухов', region:'МО', facts:[
+        {l:'Зона',v:'Серпухов, Подольск, Климовск'},{l:'Тип',v:'ВПК и наука'},
+      ], also:'ИФВЭ Протвино (ядерный центр), завод «Климовск» (боеприпасы)'},
+    ]
+  },
+  {
+    id:'vol', name:'Россети\nВолга', tier:'tb', stake:'55.38%',
+    fullName:'ПАО «Россети Волга»', hq:'Саратов', ticker:'MRKV',
+    kpis:[
+      {val:'55.38%',lbl:'Доля «Россетей»'},
+      {val:'7 регионов',lbl:'ПФО'},
+      {val:'Саратов',lbl:'Штаб-квартира'},
+      {val:'MRKV',lbl:'Тикер Мосбиржа'},
+    ],
+    branches:[
+      {name:'Мордовэнерго', city:'Саранск', region:'Республика Мордовия', facts:[
+        {l:'Зона',v:'Республика Мордовия'},{l:'Тип',v:'Оптические волокна, светотехника, промышленность'},
+      ], also:'Завод «Оптиковолоконные системы», светотехнический кластер'},
+      {name:'Чувашэнерго', city:'Чебоксары', region:'Чувашская Республика', facts:[
+        {l:'Зона',v:'Чувашия и Чебоксары'},{l:'Тип',v:'Машиностроение, электроника'},
+      ], also:'Концерн «Тракторные заводы», завод промышленных тракторов'},
+      {name:'Пензаэнерго', city:'Пенза', region:'Пензенская обл.', facts:[
+        {l:'Зона',v:'Пензенская область'},{l:'Тип',v:'ВПК, приборостроение'},
+      ], also:'Пензенские приборостроительные заводы, нефтепереработка'},
+      {name:'Оренбургэнерго', city:'Оренбург', region:'Оренбургская обл.', facts:[
+        {l:'Зона',v:'Оренбургская область'},{l:'Тип',v:'Нефть, газ, чёрная металлургия'},
+      ], also:'ОГПЗ (крупнейший в Европе газоперерабатывающий завод), УГМК'},
+      {name:'Ульяновскэнерго', city:'Ульяновск', region:'Ульяновская обл.', facts:[
+        {l:'Зона',v:'Ульяновская область'},{l:'Тип',v:'Авиастроение, ОПК'},
+      ], also:'АО «Авиастар-СП» (производство Ил-76МД-90А, МС-21)'},
+      {name:'Саратовэнерго', city:'Саратов', region:'Саратовская обл.', facts:[
+        {l:'Адрес',v:'г. Саратов, ул. Первомайская, 42/44'},{l:'Зона',v:'Саратовская область'},
+      ], also:'Саратовская ГЭС, нефтепереработка (НПЗ Лукойл)'},
+    ]
+  },
+];
+
+/* ═══════════════════════════════════════════
+   BUILD MRSK ROW
+═══════════════════════════════════════════ */
+let activeId = null;
+
+function buildMrskRow() {
+  const row = document.getElementById('mrskRow');
+  MRSK_DATA.forEach((m, i) => {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;flex:1;min-width:100px;max-width:130px';
+
+    const vc = document.createElement('div');
+    vc.style.cssText = 'width:2px;height:20px;background:var(--bord2);margin:0 auto';
+
+    const node = document.createElement('div');
+    node.className = `tn-mrsk ${m.tier}-node`;
+    node.dataset.id = m.id;
+    node.setAttribute('role','button');
+    node.setAttribute('tabindex','0');
+    node.setAttribute('aria-expanded','false');
+    node.innerHTML = `<div class="tn-mrsk-name">${m.name.replace('\n','<br>')}</div><span class="tn-mrsk-stake">${m.stake}</span><div class="tn-mrsk-click">нажмите ▾</div>`;
+    node.addEventListener('click', () => toggleExpand(m.id, node));
+    node.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleExpand(m.id,node);} });
+
+    wrap.appendChild(vc);
+    wrap.appendChild(node);
+    row.appendChild(wrap);
+  });
+}
+
+function toggleExpand(id, clickedNode) {
+  const panel = document.getElementById('expandPanel');
+  const wasOpen = activeId === id;
+
+  // reset all
+  document.querySelectorAll('.tn-mrsk').forEach(n => {
+    n.classList.remove('active');
+    n.setAttribute('aria-expanded','false');
+  });
+
+  if(wasOpen) {
+    activeId = null;
+    panel.classList.remove('open');
+    return;
+  }
+
+  activeId = id;
+  clickedNode.classList.add('active');
+  clickedNode.setAttribute('aria-expanded','true');
+
+  const data = MRSK_DATA.find(m => m.id === id);
+  renderExpandPanel(data);
+  panel.classList.add('open');
+  setTimeout(() => {
+    panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }, 100);
+}
+
+function renderExpandPanel(d) {
+  // header
+  document.getElementById('epName').textContent = d.fullName;
+  const meta = document.getElementById('epMeta');
+  meta.innerHTML = `
+    <span class="ep-badge" style="background:rgba(33,150,243,.12);color:#64b5f6">Тикер: ${d.ticker}</span>
+    <span class="ep-badge" style="background:rgba(156,39,176,.1);color:#ce93d8">Штаб-квартира: ${d.hq}</span>
+    <span class="ep-badge" style="background:rgba(76,175,80,.1);color:#81c784">Доля: ${d.kpis[0].val}</span>`;
+
+  // kpis
+  const kpis = document.getElementById('epKpis');
+  kpis.innerHTML = d.kpis.map(k => `
+    <div class="ep-kpi"><div class="ep-kpi-val">${k.val}</div><div class="ep-kpi-lbl">${k.lbl}</div></div>`).join('');
+
+  // branches
+  const list = document.getElementById('branchesList');
+  list.innerHTML = d.branches.map((b, i) => `
+    <div class="branch-row" data-branch="${i}">
+      <div class="branch-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleBranch(this)" onkeydown="if(event.key==='Enter'){toggleBranch(this)}">
+        <div class="branch-expand-icon" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <span class="branch-city-icon">🏭</span>
+        <div class="branch-name">${b.name}</div>
+        <div class="branch-city">г. ${b.city}</div>
+        <div class="branch-region">${b.region}</div>
+      </div>
+      <div class="branch-detail">
+        <div class="branch-detail-inner">
+          <div class="bd-facts">
+            ${b.facts.map(f=>`<div class="bd-fact"><div class="bd-fact-lbl">${f.l}</div><div class="bd-fact-val">${f.v}</div></div>`).join('')}
+          </div>
+          ${b.also ? `<div class="bd-also"><strong>Крупные потребители / особенности:</strong> ${b.also}</div>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleBranch(header) {
+  const row = header.closest('.branch-row');
+  const isOpen = row.classList.contains('open');
+  document.querySelectorAll('.branch-row.open').forEach(r => { r.classList.remove('open'); r.querySelector('.branch-header').setAttribute('aria-expanded','false'); });
+  if(!isOpen) {
+    row.classList.add('open');
+    header.setAttribute('aria-expanded','true');
+  }
+}
+
+document.getElementById('epClose').addEventListener('click', () => {
+  document.getElementById('expandPanel').classList.remove('open');
+  document.querySelectorAll('.tn-mrsk').forEach(n => { n.classList.remove('active'); n.setAttribute('aria-expanded','false'); });
+  activeId = null;
+});
+
+/* ═══════════════════════════════════════════
+   THEME TOGGLE
+═══════════════════════════════════════════ */
+(function(){
+  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d='dark';r.setAttribute('data-theme',d);
+  function upd(th){r.setAttribute('data-theme',th);t.innerHTML=th==='dark'?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';}
+  upd(d);
+  t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';upd(d);});
+})();
+
+/* ═══════════════════════════════════════════
+   CHARTS
+═══════════════════════════════════════════ */
+function isDark(){return document.documentElement.getAttribute('data-theme')==='dark'}
+const gc=()=>({txt:isDark()?'#8b949e':'#5a6270',grid:isDark()?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.06)'});
+const baseOpt = () => ({
+  responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{backgroundColor:isDark()?'#21262d':'#fff',borderColor:isDark()?'rgba(255,255,255,.1)':'rgba(0,0,0,.1)',borderWidth:1,titleColor:isDark()?'#e6edf3':'#1a1d23',bodyColor:gc().txt,padding:10}},
+  scales:{x:{grid:{color:gc().grid},ticks:{color:gc().txt,font:{size:11,family:"'Inter'"}}},y:{grid:{color:gc().grid},ticks:{color:gc().txt,font:{size:11,family:"'Inter'"}}}}
+});
+
+new Chart(document.getElementById('revChart'),{type:'bar',data:{labels:['2022','2023','2024','2025'],datasets:[{data:[1.19,1.37,1.51,1.83],backgroundColor:['rgba(33,150,243,.55)','rgba(33,150,243,.6)','rgba(33,150,243,.7)','rgba(33,150,243,.95)'],borderRadius:6,borderSkipped:false}]},options:baseOpt()});
+
+new Chart(document.getElementById('profChart'),{type:'bar',data:{labels:['2022','2023','2024','2025'],datasets:[{data:[112,86,-116.86,203.38],backgroundColor:['rgba(76,175,80,.7)','rgba(76,175,80,.7)','rgba(244,67,54,.7)','rgba(76,175,80,.95)'],borderRadius:6,borderSkipped:false}]},options:baseOpt()});
+
+new Chart(document.getElementById('ebitChart'),{type:'line',data:{labels:['2022','2023','2024','2025'],datasets:[{data:[380,450,519.4,668.18],borderColor:'#9c27b0',backgroundColor:'rgba(156,39,176,.1)',borderWidth:2.5,pointRadius:5,fill:true,tension:.35}]},options:baseOpt()});
+
+new Chart(document.getElementById('capChart'),{type:'bar',data:{labels:['2024','2025','2026п','2027п','2028п','2029п'],datasets:[{data:[695,724.9,857.1,823.6,657.2,584.1],backgroundColor:['rgba(255,152,0,.6)','rgba(255,152,0,.7)','rgba(255,152,0,.95)','rgba(255,152,0,.7)','rgba(255,152,0,.55)','rgba(255,152,0,.45)'],borderRadius:6,borderSkipped:false}]},options:baseOpt()});
+
+new Chart(document.getElementById('ownChart'),{type:'doughnut',data:{labels:['Росимущество (РФ)','Казначейские','Миноритарии'],datasets:[{data:[75,7,18],backgroundColor:['#2196f3','#607d8b','#90a4ae'],borderColor:isDark()?'#161b22':'#fff',borderWidth:3,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:true,cutout:'63%',plugins:{legend:{display:false},tooltip:{backgroundColor:isDark()?'#21262d':'#fff',borderColor:isDark()?'rgba(255,255,255,.1)':'rgba(0,0,0,.1)',borderWidth:1,callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed}%`}}}}});
+
+/* Build tree on load */
+buildMrskRow();
+</script>
+</body>
+</html>
